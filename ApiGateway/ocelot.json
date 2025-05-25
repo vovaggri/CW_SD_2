@@ -1,0 +1,18 @@
+{
+  "Routes": [
+    {
+      "DownstreamPathTemplate": "/files/{everything}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [{ "Host": "filestoring", "Port": 80 }],
+      "UpstreamPathTemplate": "/files/{everything}",
+      "UpstreamHttpMethod": [ "GET", "POST" ]
+    },
+    {
+      "DownstreamPathTemplate": "/analysis/{fileId}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [{ "Host": "fileanalysis", "Port": 80 }],
+      "UpstreamPathTemplate": "/analysis/{fileId}",
+      "UpstreamHttpMethod": [ "GET", "POST" ]
+    }
+  ]
+}

@@ -1,0 +1,57 @@
+# This is a generated file. Not intended for manual editing.
+version: "3.8"
+services:
+  fileanalysis:
+    build:
+      context: "/Users/vladimirgrigoryev/RiderProjects/CW_SD_2"
+      dockerfile: "FileAnalysisService/Dockerfile"
+      target: "build"
+    command: []
+    entrypoint:
+    - "dotnet"
+    - "/app/bin/Debug/net8.0/FileAnalysisService.dll"
+    environment:
+      ASPNETCORE_ENVIRONMENT: "Development"
+    image: "fileanalysisservice:dev"
+    ports: []
+    volumes:
+    - "/Users/vladimirgrigoryev/RiderProjects/CW_SD_2/FileAnalysisService:/app:rw"
+    - "/Users/vladimirgrigoryev/RiderProjects/CW_SD_2:/src:rw"
+    - "/Users/vladimirgrigoryev/.nuget/packages:/root/.nuget/packages"
+    working_dir: "/app"
+  filestoring:
+    build:
+      context: "/Users/vladimirgrigoryev/RiderProjects/CW_SD_2"
+      dockerfile: "FileStoringService/Dockerfile"
+      target: "build"
+    command: []
+    entrypoint:
+    - "dotnet"
+    - "/app/bin/Debug/net8.0/FileStoringService.dll"
+    environment:
+      ASPNETCORE_ENVIRONMENT: "Development"
+    image: "filestoringservice:dev"
+    ports: []
+    volumes:
+    - "/Users/vladimirgrigoryev/RiderProjects/CW_SD_2/FileStoringService:/app:rw"
+    - "/Users/vladimirgrigoryev/RiderProjects/CW_SD_2:/src:rw"
+    - "/Users/vladimirgrigoryev/.nuget/packages:/root/.nuget/packages"
+    working_dir: "/app"
+  gateway:
+    build:
+      context: "/Users/vladimirgrigoryev/RiderProjects/CW_SD_2"
+      dockerfile: "ApiGateway/Dockerfile"
+      target: "build"
+    command: []
+    entrypoint:
+    - "dotnet"
+    - "/app/bin/Debug/net8.0/ApiGateway.dll"
+    environment:
+      ASPNETCORE_ENVIRONMENT: "Development"
+    image: "apigateway:dev"
+    ports: []
+    volumes:
+    - "/Users/vladimirgrigoryev/RiderProjects/CW_SD_2/ApiGateway:/app:rw"
+    - "/Users/vladimirgrigoryev/RiderProjects/CW_SD_2:/src:rw"
+    - "/Users/vladimirgrigoryev/.nuget/packages:/root/.nuget/packages"
+    working_dir: "/app"

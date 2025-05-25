@@ -1,0 +1,56 @@
+services:
+  postgres-filestorage:
+    image: postgres:15
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: pass
+      POSTGRES_DB: filestorage
+    volumes:
+      - pgdata-storage:/var/lib/postgresql/data
+
+  filestoring:
+    build:
+      context: .
+      dockerfile: FileStoringService/Dockerfile
+    depends_on:
+      - postgres-filestorage
+    environment:
+      - ConnectionStrings__Postgres=Host=postgres-filestorage;Database=filestorage;Username=user;Password=pass
+    ports:
+      - "5001:80"
+
+  postgres-analysis:
+    image: postgres:15
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: pass
+      POSTGRES_DB: fileanalysis
+    volumes:
+      - pgdata-analysis:/var/lib/postgresql/data
+
+  fileanalysis:
+    build: 
+      context: .
+      dockerfile: FileAnalysisService/Dockerfile
+    depends_on:
+      - filestoring
+      - postgres-analysis
+    environment:
+      - ConnectionStrings__Postgres=Host=postgres-analysis;Database=fileanalysis;Username=user;Password=pass
+      - FileStoring__BaseUrl=http://filestoring
+    ports:
+      - "5002:80"
+
+  gateway:
+    build:
+      context: .
+      dockerfile: ApiGateway/Dockerfile
+    depends_on:
+      - filestoring
+      - fileanalysis
+    ports:
+      - "5003:80"
+
+volumes:
+  pgdata-storage:
+  pgdata-analysis:
