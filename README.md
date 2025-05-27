@@ -36,7 +36,7 @@
     - Два отдельных контейнера (для файлов и для анализа).
 
 ## Документация
-1. Postman Collection: `https://vladimirgrigoryev-3319846.postman.co/workspace/Vladimir-Grigoryev's-Workspace~bad03bf3-a064-4005-8fe1-b011bf26544a/collection/43837745-21957484-f070-44d8-a903-13f7d9ad1459?action=share&creator=43837745`
+1. Postman Collection: [Ссылка на postman](https://vladimirgrigoryev-3319846.postman.co/workspace/Vladimir-Grigoryev's-Workspace~bad03bf3-a064-4005-8fe1-b011bf26544a/collection/43837745-21957484-f070-44d8-a903-13f7d9ad1459?action=share&creator=43837745)
 2. Swagger:
     * FileStoring: `http://localhost:5001/swagger`
     * FileAnalysis: `http://localhost:5002/swagger`
