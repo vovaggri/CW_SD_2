@@ -19,27 +19,39 @@ public class FileAnalysisService : IFileAnalysisService
 
     public async Task<AnalysisResult> AnalyzeAsync(Guid fileId)
     {
-        // 1) Скачиваем байты
+        // Скачиваем байты
         var bytes = await _fileClient.GetByteArrayAsync($"/files/{fileId}");
 
-        // 2) Считаем SHA256
+        // Считаем SHA256
         var hash = ComputeHash(bytes);
 
-        // 3) Смотрим, не анализировали ли мы уже точно такой файл
-        if (await _repository.GetByFileHashAsync(hash) is { } dup)
+        // Проверяем на дубликат
+        var existing = await _repository.GetByFileHashAsync(hash);
+        if (existing != null)
         {
-            // помечаем 100% совпадение
-            dup.SimilarityScore = 1.0;
-            return dup;
+            var dupResult = new AnalysisResult
+            {
+                Id                 = Guid.NewGuid(), 
+                FileId             = fileId, 
+                FileHash           = hash,
+                Paragraphs         = existing.Paragraphs,
+                Words              = existing.Words,
+                Characters         = existing.Characters,
+                SimilarityScore    = 1.0,
+                CloudImageLocation = existing.CloudImageLocation,
+                CreatedAt          = DateTime.UtcNow
+            };
+            await _repository.AddAsync(dupResult);
+            return dupResult;
         }
 
-        // 4) Прежняя статистика
+        // Прежняя статистика
         var text  = Encoding.UTF8.GetString(bytes);
         var stats = ComputeStatistics(text);
 
         var cloudUrl = BuildWordCloudUrl(text);
 
-        // 5) Генерим URL облака и сохраняем новый результат
+        // Генерим URL облака и сохраняем новый результат
         var result = new AnalysisResult {
             Id = Guid.NewGuid(),
             FileId  = fileId,
@@ -47,8 +59,7 @@ public class FileAnalysisService : IFileAnalysisService
             Paragraphs = stats.Paragraphs,
             Words = stats.Words,
             Characters = stats.Characters,
-            SimilarityScore = 0.0,  // или рассчитанный коэффициент
-            CloudImageLocation = cloudUrl,
+            SimilarityScore = 0.0,
             CreatedAt = DateTime.UtcNow
         };
         await _repository.AddAsync(result);
@@ -56,6 +67,9 @@ public class FileAnalysisService : IFileAnalysisService
     }
 
     public Task<AnalysisResult> GetResultAsync(Guid fileId) => _repository.GetByFileIdAsync(fileId);
+    
+    public Task<byte[]> GetFileBytesAsync(Guid fileId)
+        => _fileClient.GetByteArrayAsync($"/files/{fileId}");
     
     private static string ComputeHash(byte[] data)
     {

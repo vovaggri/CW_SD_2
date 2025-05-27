@@ -3,24 +3,33 @@
     {
       "DownstreamPathTemplate": "/files",
       "UpstreamPathTemplate":   "/files",
-      "UpstreamHttpMethod":     ["POST"],
-      "DownstreamHostAndPorts": [{"Host":"filestoring","Port":8080}],
-      "DownstreamScheme":       "http"
+      "UpstreamHttpMethod":     [ "POST" ],
+      "DownstreamScheme":       "http",
+      "DownstreamHostAndPorts": [ { "Host": "filestoring",   "Port": 8080 } ]
     },
     {
       "DownstreamPathTemplate": "/files/{everything}",
       "UpstreamPathTemplate":   "/files/{everything}",
-      "UpstreamHttpMethod":     ["GET"],
-      "DownstreamHostAndPorts": [{"Host":"filestoring","Port":8080}],
-      "DownstreamScheme":       "http"
+      "UpstreamHttpMethod":     [ "GET" ],
+      "DownstreamScheme":       "http",
+      "DownstreamHostAndPorts": [ { "Host": "filestoring",   "Port": 8080 } ]
+    },
+    {
+      "DownstreamPathTemplate": "/analysis/{fileId}/cloud",
+      "UpstreamPathTemplate":   "/analysis/{fileId}/cloud",
+      "UpstreamHttpMethod":     [ "GET" ],
+      "DownstreamScheme":       "http",
+      "DownstreamHostAndPorts": [ { "Host": "fileanalysis",  "Port": 8080 } ]
     },
     {
       "DownstreamPathTemplate": "/analysis/{fileId}",
       "UpstreamPathTemplate":   "/analysis/{fileId}",
-      "UpstreamHttpMethod":     ["GET","POST"],
-      "DownstreamHostAndPorts": [{"Host":"fileanalysis","Port":8080}],
-      "DownstreamScheme":       "http"
+      "UpstreamHttpMethod":     [ "POST", "GET" ],
+      "DownstreamScheme":       "http",
+      "DownstreamHostAndPorts": [ { "Host": "fileanalysis",  "Port": 8080 } ]
     }
   ],
-  "GlobalConfiguration": { "RequestIdKey": "OcRequestId" }
+  "GlobalConfiguration": {
+    "RequestIdKey": "OcRequestId"
+  }
 }

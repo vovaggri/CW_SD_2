@@ -24,9 +24,23 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+builder.Services
+    .AddControllers(options =>
+    {
+        options.ReturnHttpNotAcceptable = false;
+        options.RespectBrowserAcceptHeader = true;
+    })
+    .AddJsonOptions(opts => {  });
+
 var app = builder.Build();
 
-// Middleware обработки исключений (тот же, что и в остальном проекте)
+using (var scope = app.Services.CreateScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<AnalysisDbContext>();
+    db.Database.Migrate();
+}
+
+// Middleware обработки исключений
 app.UseMiddleware<GlobalExceptionHandlerMiddleware>();
 
 app.UseSwagger(); 

@@ -9,10 +9,10 @@ public class AnalysisResultRepository : IAnalysisResultRepository
     private readonly AnalysisDbContext _db;
     public AnalysisResultRepository(AnalysisDbContext db) => _db = db;
     
-    public Task<AnalysisResult> GetByFileIdAsync(Guid fileId) => 
+    public Task<AnalysisResult?> GetByFileIdAsync(Guid fileId) => 
         _db.AnalysisResults.FirstOrDefaultAsync(r => r.FileId == fileId);
     
-    public Task<AnalysisResult> GetByFileHashAsync(string hash) =>
+    public Task<AnalysisResult?> GetByFileHashAsync(string hash) =>
         _db.AnalysisResults
             .FirstOrDefaultAsync(r => r.FileHash == hash);
 

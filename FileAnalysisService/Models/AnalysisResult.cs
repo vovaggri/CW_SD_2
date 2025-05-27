@@ -9,6 +9,6 @@ public class AnalysisResult
     public int Words { get; set; }
     public int Characters { get; set; }
     public double SimilarityScore { get; set; }
-    public string CloudImageLocation { get; set; }
+    public string? CloudImageLocation { get; set; } 
     public DateTime CreatedAt { get; set; }
 }
