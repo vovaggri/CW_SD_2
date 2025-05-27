@@ -47,6 +47,10 @@
               "target": "Package",
               "version": "[8.0.8, )"
             },
+            "Microsoft.Extensions.DependencyInjection": {
+              "target": "Package",
+              "version": "[9.0.5, )"
+            },
             "Ocelot": {
               "target": "Package",
               "version": "[24.0.0, )"

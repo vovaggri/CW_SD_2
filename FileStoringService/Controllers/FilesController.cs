@@ -11,10 +11,14 @@ public class FilesController : ControllerBase
     public FilesController(IFileStoringService svc) => _svc = svc;
 
     [HttpPost]
-    public async Task<IActionResult> UploadFile(IFormFile file)
+    public async Task<IActionResult> UploadFile(
+        [FromForm(Name = "file")] IFormFile file)   // ← добавили [FromForm]
     {
+        if (file == null)
+            return BadRequest(new { error = "No file was provided in the form-data under key 'file'" });
+
         var id = await _svc.SaveAsync(file);
-        return Ok(id);
+        return Ok(new { id });  // оборачиваем в объект, чтобы в ответе был {"id":"..."}
     }
 
     [HttpGet("{id:guid}")]

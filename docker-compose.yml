@@ -7,17 +7,23 @@ services:
       POSTGRES_DB: filestorage
     volumes:
       - pgdata-storage:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U user -d filestorage"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
 
   filestoring:
     build:
       context: .
       dockerfile: FileStoringService/Dockerfile
     depends_on:
-      - postgres-filestorage
+      postgres-filestorage:
+        condition: service_healthy
     environment:
       - ConnectionStrings__Postgres=Host=postgres-filestorage;Database=filestorage;Username=user;Password=pass
     ports:
-      - "5001:80"
+      - "5001:8080"
 
   postgres-analysis:
     image: postgres:15
@@ -27,19 +33,26 @@ services:
       POSTGRES_DB: fileanalysis
     volumes:
       - pgdata-analysis:/var/lib/postgresql/data
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U user -d fileanalysis" ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
 
   fileanalysis:
     build: 
       context: .
       dockerfile: FileAnalysisService/Dockerfile
     depends_on:
-      - filestoring
-      - postgres-analysis
+      postgres-analysis:
+        condition: service_healthy
+      filestoring:
+        condition: service_started
     environment:
       - ConnectionStrings__Postgres=Host=postgres-analysis;Database=fileanalysis;Username=user;Password=pass
       - FileStoring__BaseUrl=http://filestoring
     ports:
-      - "5002:80"
+      - "5002:8080"
 
   gateway:
     build:
@@ -49,7 +62,7 @@ services:
       - filestoring
       - fileanalysis
     ports:
-      - "5003:80"
+      - "5003:8080"
 
 volumes:
   pgdata-storage:
